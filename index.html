@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title>签到功能</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="Jesse">
+    <style type="text/css">
+    body{
+        font-family:"misrosoft yahei";
+    }
+    #signBtn {
+        width: 150px;
+        height: 30px;
+        line-height: 30px;
+        color:#fff;
+        cursor:pointer;
+        background-color: #0099ff;
+        border-radius: 5px;
+        text-align: center;
+    }
+    </style>
+</head>
+
+<body>
+    <p id="signBtn"></p>
+    <p>您的签到积分为:<span id="signScores"></span>分</p>
+    <script type="text/javascript">
+    // var number = 'yWX245365',username = '测试';
+    var number = 'yWX348548',username = '杨冬';
+    // var number = 'yWX348541',username = '杨冬1';
+    // var number = 'yWX348542',username = '杨冬2';
+    // var number = 'yWX348543',username = '杨冬3';
+    var signBtn = document.getElementById('signBtn'),
+        signScores = document.getElementById('signScores');
+
+    isSign();
+
+    function isSign() {
+        var xhr = new XMLHttpRequest(),
+            url = "sign.php",
+            data = "do=isSign&number=" + number + "&username=" + username;
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var isSignData = JSON.parse(xhr.responseText);
+                // console.log(isSignData);
+                if(isSignData.isSign){
+                    signBtn.innerText = "已签到";
+                    signBtn.style.backgroundColor = "#ccc";
+                }else{
+                    signBtn.innerText = "签到";
+                    signBtn.addEventListener("click",function(){
+                        doSign();
+                    },false);
+                }
+                signScores.innerText = isSignData.scores;
+            }
+        }
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Cache-Control","no-cache");
+        xhr.send(data);
+    }
+
+
+    function doSign() {
+        var xhr = new XMLHttpRequest(),
+            url = "sign.php",
+            data = "do=sign&number=" + number + "&username=" + username;
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // console.log(xhr.responseText);
+                show(xhr.responseText);
+            }
+        }
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Cache-Control","no-cache");
+        xhr.send(data);
+    }
+
+    function show(data) {
+        var doSignData = JSON.parse(data);
+        alert("签到成功"+'\n'+"您本周已连续签到"+ doSignData.counts +"天");
+        signBtn.innerText = "已签到";
+        signBtn.style.backgroundColor = "#ccc";
+        signBtn.removeEventListener("click",function(){
+            doSign();
+        },false);
+        signScores.innerText = doSignData.scores;
+    }
+    </script>
+</body>
+
+</html>
