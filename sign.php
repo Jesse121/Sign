@@ -48,14 +48,14 @@ if ($do =='sign'){
 	$todayBegin = strtotime(date('Y-m-d')." 00:00:00"); 
 	$todayEnd = strtotime(date('Y-m-d')." 23:59:59"); 
 	$mysqli = new mysqli('localhost','root','131978','sign'); 
-	//解决插入数据库的中文乱码问题
-	$mysqli -> query("SET NAMES UTF8");
-	//函数转义 SQL 语句中使用的字符串中的特殊字符，防止SQL注入攻击
-	$number = mysql_real_escape_string($number);
-	$username = mysql_real_escape_string($username);
 	if($mysqli -> connect_error){
 		die("Conect Error".$mysqli->connect_error);
 	}
+	//解决插入数据库的中文乱码问题
+	$mysqli -> query("SET NAMES UTF8");
+	//函数转义 SQL 语句中使用的字符串中的特殊字符，防止SQL注入攻击
+	$number = $mysqli->real_escape_string($number);
+	$username = $mysqli->real_escape_string($username);
 	$checkSignSql = "SELECT scores FROM signInfo WHERE number = '$number' AND time < '$todayEnd' AND time > '$todayBegin'";
 	$checkSignToday = $mysqli -> query($checkSignSql) ;
 	$checkSignData = $checkSignToday -> fetch_row();

@@ -1,0 +1,14 @@
+
+
+
+
+
+
+@media screen and (min-width:1024px) {
+    .rich_media {
+        width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+    }
+}
